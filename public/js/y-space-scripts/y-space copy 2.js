@@ -1,7 +1,6 @@
 const YSpace = {
     init: () => {
         YSpace.setListeners();
-        YSpace.setMasK();
         $('#select-bank-pix-type').trigger('change');
     },
 
@@ -15,24 +14,23 @@ const YSpace = {
         const accordionMangeAccountsDrop = document.getElementById('accordionMangeAccountsDrop');
 
         accordionMangeAccountsDrop.addEventListener('shown.bs.collapse', function () {
-            YSpace.populateAccountTable();
+            YSpace.populateAccountTable(this);
         });
 
         accordionMangeAccountsDrop.addEventListener('hidden.bs.collapse', function () {
             console.log(this.id);
-            $('tbody').html("");
         });
 
-        $(document).on('click', '.pagination a', function(e) {
+        // Adiciona o listener para os botões de paginação
+        $(document).on('click', '.pagination', function(e) {
             e.preventDefault();
             let page = $(this).data('page');
-            console.log(page);
             YSpace.populateAccountTable(page);
         });
 
-        $(document).on('change', '#select-bank-pix-type', function(){
-            YSpace.addMaskToInput(this);
-        });
+        // $(document).on('change', '#select-bank-pix-type', function(){
+        //     YSpace.addMaskToInput(this);
+        // });
         // // $(document).on('change', '#select-bank-pix-type-update', function(){
         // //     YSpace.addMaskToInput(this);
         // // });
@@ -337,12 +335,10 @@ const YSpace = {
         });
     },
 
-    populateAccountTable: (page) => {
-        let url = page ? $('#route').data('url') + '?page=' + page : $('#route').data('url') ;
-        let tbody = $('tbody.active');
+    populateAccountTable: () => {
+        let url = $('#route').data('url');
+        let tbody = $('tbody');
 
-        console.log(url);
-        console.log(tbody);
         $.ajax({
             url: url,
             type: "GET",
@@ -358,13 +354,13 @@ const YSpace = {
                         let accountStatus;
                         switch (element.status) {
                             case '1':
-                                accountStatus = `<span class="">Aprovado</span>`;
+                                accountStatus = `<span class="badge badge-sm badge-success">Aprovado</span>`;
                                 break;
                             case '2':
-                                accountStatus = `<span class="">Reprovado</span>`;
+                                accountStatus = `<span class="badge badge-sm badge-danger">Reprovado</span>`;
                                 break;
                             default:
-                                accountStatus = `<span class="">Pendente</span>`;
+                                accountStatus = `<span class="badge badge-sm badge-warning">Pendente</span>`;
                                 break;
                         }
 
@@ -397,22 +393,21 @@ const YSpace = {
                     });
 
                     let pagination = '<div class="pagination">';
-                    console.log(data.links)
                     if (data.prev_page_url != null) {
                         pagination += `
                             <li class="page-item">
-                                <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${data.current_page - 1}">Anterior</a>
+                                <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="" data-page="${data.current_page - 1}">Anterior</a>
                             </li>
                         `;
                     }
-                    for (let i = 1; i <= data.last_page; i++) {
+                    for (let i = 1; i <= data.data.last_page; i++) {
                         pagination += `
-                            <li class="page-item ${data.current_page == i ? 'active' : ''}">
-                                <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${i}">${i}</a>
+                            <li class="page-item ${data.data.current_page == i ? 'active' : ''}">
+                                <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="${data.links['url'][i-1]}" data-page="${i}">${i}</a>
                             </li>
                         `;
                     }
-                    if (data.next_page_url != null) {
+                    if (data.data.next_page_url != null) {
                         pagination += `
                             <li class="page-item">
                                 <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${data.current_page + 1}">Próxima</a>

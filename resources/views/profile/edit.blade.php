@@ -5,22 +5,22 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
+    <div class="tw-py-12">
+        <div class="tw-max-w-7xl tw-mx-auto tw-sm:tw-px-6 tw-lg:tw-px-8 tw-space-y-6">
+            <div class="tw-p-4 tw-sm:p-8 tw-bg-white tw-dark:bg-gray-800 tw-shadow tw-sm:tw-rounded-lg">
+                <div class="tw-max-w-xl">
                     @include('profile.partials.update-profile-information-form')
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
+            <div class="tw-p-4 tw-sm:p-8 tw-bg-white tw-dark:bg-gray-800 tw-shadow tw-sm:tw-rounded-lg">
+                <div class="tw-max-w-xl">
                     @include('profile.partials.update-password-form')
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
+            <div class="tw-p-4 tw-sm:p-8 tw-bg-white tw-dark:bg-gray-800 tw-shadow tw-sm:tw-rounded-lg">
+                <div class="tw-max-w-xl">
                     @include('profile.partials.delete-user-form')
                 </div>
             </div>

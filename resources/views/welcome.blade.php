@@ -32,5 +32,6 @@
                 </div>
             @endif
         </div>
+        @yield('scripts')
     </body>
 </html>

@@ -29,13 +29,15 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('/y-space')->namespace('App\Http\Controllers')->group(function () {
-    Route::get('/', 'YSpaceController@index')->name('YSpaceController.index');
+    Route::get('/', 'YSpaceController@index')->name('y-space-index');
+    Route::post('/store', 'YSpaceController@store')->name('YSpaceController.store');
+    Route::get('/get-bank-accounts', 'YSpaceController@getBankAccounts')->name('YSpaceController.getBankAccounts');
 
     // Route::get('/', function () {
     //     return view('y-space.index');
     // })->name('y-space-index');
 
     // Route::get('/operacoes-locais/nova', 'LocalOperationsController@create')->name('LocalOperationsController.create');
-})->middleware('auth');
+})->middleware('auth', 'verified');
 
 require __DIR__.'/auth.php';

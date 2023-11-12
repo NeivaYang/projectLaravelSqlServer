@@ -6,11 +6,11 @@
 
 @php
 $maxWidth = [
-    'sm' => 'sm:max-w-sm',
-    'md' => 'sm:max-w-md',
-    'lg' => 'sm:max-w-lg',
-    'xl' => 'sm:max-w-xl',
-    '2xl' => 'sm:max-w-2xl',
+    'sm' => 'sm:tw-max-w-sm',
+    'md' => 'sm:tw-max-w-md',
+    'lg' => 'sm:tw-max-w-lg',
+    'xl' => 'sm:tw-max-w-xl',
+    '2xl' => 'sm:tw-max-w-2xl',
 ][$maxWidth];
 @endphp
 
@@ -59,18 +59,18 @@ $maxWidth = [
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
     >
-        <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
+        <div class="absolute inset-0 bg-gray-500 tw-dark:tw-bg-gray-900 opacity-75"></div>
     </div>
 
     <div
         x-show="show"
-        class="mb-6 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto"
-        x-transition:enter="ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-        x-transition:leave="ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        class="tw-mb-6 tw-bg-white tw-dark:tw-bg-gray-800 tw-rounded-lg tw-overflow-hidden tw-shadow-xl tw-transform tw-transition-all sm:tw-w-full {{ $maxWidth }} sm:tw-mx-auto"
+        x-transition:enter="tw-ease-out tw-duration-300"
+        x-transition:enter-start="tw-opacity-0 tw-translate-y-4 sm:tw-translate-y-0 sm:tw-scale-95"
+        x-transition:enter-end="tw-opacity-100 tw-translate-y-0 sm:tw-scale-100"
+        x-transition:leave="tw-ease-in tw-duration-200"
+        x-transition:leave-start="tw-opacity-100 tw-translate-y-0 sm:tw-scale-100"
+        x-transition:leave-end="tw-opacity-0 tw-translate-y-4 sm:tw-translate-y-0 sm:tw-scale-95"
     >
         {{ $slot }}
     </div>

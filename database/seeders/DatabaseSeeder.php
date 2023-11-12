@@ -14,11 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        
         \App\Models\User::factory(10)->create();
+        $this->call(BankListSeeder::class);
+        $this->call(BankAccountsSeeder::class);
 
         \App\Models\User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@test.com',
+            'name' => 'Admin',
+            'email' => 'admin@mail.com',
             'password' => Hash::make('123456')
         ]);
     }

@@ -1,7 +1,6 @@
 const YSpace = {
     init: () => {
         YSpace.setListeners();
-        YSpace.setMasK();
         $('#select-bank-pix-type').trigger('change');
     },
 
@@ -15,24 +14,16 @@ const YSpace = {
         const accordionMangeAccountsDrop = document.getElementById('accordionMangeAccountsDrop');
 
         accordionMangeAccountsDrop.addEventListener('shown.bs.collapse', function () {
-            YSpace.populateAccountTable();
+            YSpace.populateAccountTable(this);
         });
 
         accordionMangeAccountsDrop.addEventListener('hidden.bs.collapse', function () {
             console.log(this.id);
-            $('tbody').html("");
         });
 
-        $(document).on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            let page = $(this).data('page');
-            console.log(page);
-            YSpace.populateAccountTable(page);
-        });
-
-        $(document).on('change', '#select-bank-pix-type', function(){
-            YSpace.addMaskToInput(this);
-        });
+        // $(document).on('change', '#select-bank-pix-type', function(){
+        //     YSpace.addMaskToInput(this);
+        // });
         // // $(document).on('change', '#select-bank-pix-type-update', function(){
         // //     YSpace.addMaskToInput(this);
         // // });
@@ -337,92 +328,36 @@ const YSpace = {
         });
     },
 
-    populateAccountTable: (page) => {
-        let url = page ? $('#route').data('url') + '?page=' + page : $('#route').data('url') ;
-        let tbody = $('tbody.active');
-
-        console.log(url);
-        console.log(tbody);
+    populateAccountTable: (element) => {
+        console.log(element);
         $.ajax({
-            url: url,
+            url: '/y-space/get-bank-ccounts',
             type: "GET",
             dataType: "json",
             beforeSend: function () {
                 // UTILS.displayLoader();
-                $(tbody).html("");
+                $('').html("");
             },
             success: function (data) {
-                console.log(data);
-                if (data.data.length > 0) {
-                    data.data.map(element => {
+                if (data.bank_accounts.length > 0) {
+                    data.bank_accounts.map(element => {
                         let accountStatus;
                         switch (element.status) {
                             case '1':
-                                accountStatus = `<span class="">Aprovado</span>`;
+                                accountStatus = `<span class="badge badge-sm badge-success">Aprovado</span>`;
                                 break;
                             case '2':
-                                accountStatus = `<span class="">Reprovado</span>`;
+                                accountStatus = `<span class="badge badge-sm badge-danger">Reprovado</span>`;
                                 break;
                             default:
-                                accountStatus = `<span class="">Pendente</span>`;
+                                accountStatus = `<span class="badge badge-sm badge-warning">Pendente</span>`;
                                 break;
                         }
 
-                        $(tbody).append(`
-                            <tr>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                    ${element.display_date_request}
-                                </td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                    ${element.name}
-                                </td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                    ${element.display_owner_name}
-                                </td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                    ${element.type == 0 ? 'Corrente' : 'Poupança'}
-                                </td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                    ${element.pix_key}
-                                </td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                    ${accountStatus}
-                                </td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                    <button class="btn btn-sm btn-primary bank-account-details" data-id="${element.id}" data-toggle="modal" data-target="#bankAccountDetailsModal">
-                                    <button class="btn btn-sm btn-danger remove-bank-account" data-id="${element.id}">
-                                </td>
-                            </tr>
+                        $('#accounts-table').append(`
+
                         `);
                     });
-
-                    let pagination = '<div class="pagination">';
-                    console.log(data.links)
-                    if (data.prev_page_url != null) {
-                        pagination += `
-                            <li class="page-item">
-                                <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${data.current_page - 1}">Anterior</a>
-                            </li>
-                        `;
-                    }
-                    for (let i = 1; i <= data.last_page; i++) {
-                        pagination += `
-                            <li class="page-item ${data.current_page == i ? 'active' : ''}">
-                                <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${i}">${i}</a>
-                            </li>
-                        `;
-                    }
-                    if (data.next_page_url != null) {
-                        pagination += `
-                            <li class="page-item">
-                                <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${data.current_page + 1}">Próxima</a>
-                            </li>
-                        `;
-                    }
-                    pagination += '</div>';
-                    $(tbody).append(`
-                        ${pagination}
-                    `);
                 } else {
                     $('#accounts-table').append(`
                         <tr>
