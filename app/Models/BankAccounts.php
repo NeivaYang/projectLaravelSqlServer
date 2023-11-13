@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\User;
+use App\Models\BankList;
+use Carbon\Carbon;
 
 class BankAccounts extends Model
 {
@@ -65,5 +68,10 @@ class BankAccounts extends Model
 
     public function getDisplayDateRequestAttribute() {
         return date('d/m/Y', strtotime($this->date_request));
+    }
+
+    public function fromDateTime($value)
+    {
+        return Carbon::parse(parent::fromDateTime($value))->format('Y-d-m H:i:s');
     }
 }

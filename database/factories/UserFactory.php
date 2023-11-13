@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             //criar um hora no formato de dateTime para banco de dados sql server
-            'email_verified_at' => fake()->dateTime(),
+            // 'email_verified_at' => now(),
             // 'email_verified_at' => ,
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
