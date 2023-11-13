@@ -28,7 +28,7 @@
                 <div class="accordion-body">
                     <div class="tw-max-w-7xl tw-mx-auto tw-py-6 tw-sm:px-6 tw-lg:px-8">
                         <div class="tw-overflow-hidden tw-shadow-sm tw-rounded-lg">
-                            <div class="tw-min-w-full tw-overflow-x-auto">
+                            <div class="tw-min-w-full">
                                 <input hidden id="route" data-url="{{ route('YSpaceController.getBankAccounts') }}">
                                 @if(Auth::user()->role != 'admin')
                                     <table class="tw-min-w-full tw-divide-y tw-divide-gray-200">
@@ -174,7 +174,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="text-label">Tipo de Conta</label>
+                                            <x-input-label for="select-bank-acc-type-id" :value="__('Tipo de Conta')" />
                                             <select class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" id="select-bank-acc-type-id" name="type">
                                                 <option value="0" selected>Corrente</option>
                                                 <option value="1">Poupança</option>
@@ -184,8 +184,8 @@
                                         <hr class="divider mt-4 mb-4">
 
                                         <div class="form-group">
-                                            <label class="text-label">Tipo de Chave</label>
-                                            <select class="form-control default-select" id="select-bank-pix-type" name="pix_type">
+                                            <x-input-label for="select-bank-pix-type" :value="__('Tipo de Chave')" />
+                                            <select  class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" id="select-bank-pix-type" name="pix_type">
                                                 <option value="1">CPF</option>
                                                 <option value="2">CNPJ</option>
                                                 <option value="3">Email</option>
@@ -199,7 +199,7 @@
                                             <x-text-input id="pix-chave" class="tw-block tw-mt-1 tw-w-full" type="text" name="pix_key" :value="null"/>
                                         </div>
 
-                                        <x-primary-button class="tw-ms-3 mt-2" onclick="event.preventDefault();this.closest('form').submit();">
+                                        <x-primary-button class="tw-ms-3 mt-2" onclick="event.preventDefault();$('#AddBankAccForm').submit()">
                                             {{ __('Adicionar Conta') }}
                                         </x-primary-button>
                                     </form>

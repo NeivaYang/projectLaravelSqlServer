@@ -78,4 +78,9 @@ trait Common
             return $this->cnpjIsValid($cpfCnpj);
         }
     }
+
+    public function fromDateTime($value)
+    {
+        return Carbon::parse(parent::fromDateTime($value))->format('Y-d-m H:i:s');
+    }
 }

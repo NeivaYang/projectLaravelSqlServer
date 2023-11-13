@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\BankList;
 use App\Models\BankAccounts;
+use App\Traits\Common;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class YSpaceController extends Controller
 {
@@ -56,34 +59,40 @@ class YSpaceController extends Controller
 
         $code = $bank[0];
         $ispb = $bank[1];
+        try {
+            DB::beginTransaction();
+            $bank_accounts = new BankAccounts();
+            $bank_accounts->user_id = auth()->user()->id;
+            $bank_accounts->ispb = strval($ispb);
+            $bank_accounts->bank = strval($code);
+            $bank_accounts->agency = strval($request->agency);
+            $bank_accounts->number = strval($request->number);
+            $bank_accounts->digit = $request->digit;
+            $bank_accounts->type = $request->type;
+            $bank_accounts->pix_type = $request->pix_type;
+            $bank_accounts->pix_key = $request->pix_key;
+            $bank_accounts->date_request = date('Y-m-d H:i:s');
 
-        $bank_accounts_list = DB::table('bank_accounts_lists')->insert([
-            'user_id' => $user_id,
-            'ispb' => $ispb,
-            'bank' => $code,
-            'agency' => $request->agency,
-            'number' => $request->number,
-            'digit' => $request->digit,
-            'type' => $request->type,
-            'pix_type' => $request->pix_type,
-            'pix_key' => $request->pix_key,
-            'status' => '0',
-        ]);
-
-        if ($bank_accounts_list) {
-            $data = [
-                'status' => 'success',
-                'message' => 'Conta bancária adicionada com sucesso!'
-            ];
-            return $data;
-        } else {
+            if ($bank_accounts->save()) {
+                $data = [
+                    'status' => 'success',
+                    'message' => 'Conta bancária adicionada com sucesso!'
+                ];
+            } else {
+                $data = [
+                    'status' => 'error',
+                    'message' => 'Não foi possível adicionar a conta bancária.'
+                ];
+            };
+            DB::commit();
+        } catch (\Exception $e) {
             $data = [
                 'status' => 'error',
-                'message' => 'Não foi possível adicionar a conta bancária.'
+                'message' => $e->getMessage()
             ];
-            return $data;
-        };
-        dd($request->all());
+        }
+
+        return $data;
     }
 
     public function getBankAccounts()
