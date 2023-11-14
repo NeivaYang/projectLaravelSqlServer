@@ -277,7 +277,6 @@ class YSpaceController extends Controller
 
     public function approve(Request $request) 
     {
-        dd( $request->all());
         try {
             DB::beginTransaction();
             $response = BankAccounts::where('id', $request->account_id)->first()

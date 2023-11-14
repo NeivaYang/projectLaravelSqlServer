@@ -283,7 +283,7 @@
                             </div>
 
                             <x-primary-button class="tw-ms-3 mt-2" onclick="event.preventDefault();$('#DisapproveForm').submit()">
-                                {{ __('Disaprovar Conta') }}
+                                {{ __('Desaprovar Conta') }}
                             </x-primary-button>
                         </form>
                     </div>

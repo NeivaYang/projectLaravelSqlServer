@@ -67,8 +67,6 @@ const YSpace = {
                             account_id: account_id,
                         },
                         dataType: "json",
-                        processData: true,
-                        contentType: false,
                         success: function (data) {
                             if (data.status == 'success') {
                                 Swal.fire({

@@ -77,6 +77,6 @@ class BankAccounts extends Model
 
     public function fromDateTime($value)
     {
-        return Carbon::parse(parent::fromDateTime($value))->format('Y-d-m H:i:s');
+        return Carbon::parse(parent::fromDateTime($value))->format('d-m-Y H:i:s');
     }
 }
