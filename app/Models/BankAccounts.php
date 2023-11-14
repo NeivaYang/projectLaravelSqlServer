@@ -47,17 +47,22 @@ class BankAccounts extends Model
         return $this->belongsTo(BankList::class, 'ispb', 'ispb');
     }
 
-    // public function scopeWithRelations($query, $relations = [])
+    // public function scopeWithBankList($query)
     // {
-    //     if (empty($relations)) {
-    //         $relations = ['user', 'bankList'];
-    //     }
-
-    //     return $query->with($relations);
+    //     return $query->select('bank_accounts.*', 'bank_lists.name', 'bank_lists.code', 'bank_lists.fullname', 'bank_lists.ispb')
+    //         ->join('bank_lists', 'bank_accounts.ispb', '=', 'bank_lists.ispb');
     // }
+    public function scopeWithRelations($query, $relations = [])
+    {
+        if (empty($relations)) {
+            $relations = ['user', 'bankList'];
+        }
+
+        return $query->with($relations);
+    }
 
     public function getDisplayBankNameAttribute() {
-        $bank = BankList::query()->select('name')->where('ispb', '=', $this->ispb)->first();
+        $bank = BankList::query()->select('fullname')->where('ispb', '=', $this->ispb)->first();
         return $bank->name;
     }
 

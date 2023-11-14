@@ -30,11 +30,11 @@ class BankAccountsFactory extends Factory
             'agency' => strval($this->faker->randomNumber(4)),
             'number' => strval($this->faker->randomNumber(6)),
             'digit' => $this->faker->randomNumber(1),
-            'type' => rand(0, 1), // ensure "type" value is one of the allowed values
-            'pix_type' =>  array_rand([0, 1, 2, 3, 4]),
-            'pix_key' => $this->faker->randomElement(['00000000000', '00000000000000', 'email@mail.com', '34999999999', '0000000000000000000000000000000']),
-            'status' =>  array_rand([0, 1, 2]),
-            'disapproval_justification' => $this->faker->text(),
+            'type' => $this->faker->randomElement(['current', 'savings']),
+            'pix_type' =>  $this->faker->randomElement(['cpf', 'cnpj', 'email', 'phone', 'random']),
+            'pix_key' => $this->faker->regexify('[a-zA-Z0-9]{20}'),
+            'status' =>  $this->faker->randomElement(['pending', 'approved', 'disapproved']),
+            // 'disapproval_justification' => $this->faker->text(),
         ];
     }
 }

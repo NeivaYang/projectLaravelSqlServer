@@ -32,12 +32,11 @@ Route::prefix('/y-space')->namespace('App\Http\Controllers')->group(function () 
     Route::get('/', 'YSpaceController@index')->name('y-space-index');
     Route::post('/store', 'YSpaceController@store')->name('YSpaceController.store');
     Route::get('/get-bank-accounts', 'YSpaceController@getBankAccounts')->name('YSpaceController.getBankAccounts');
-
-    // Route::get('/', function () {
-    //     return view('y-space.index');
-    // })->name('y-space-index');
-
-    // Route::get('/operacoes-locais/nova', 'LocalOperationsController@create')->name('LocalOperationsController.create');
+    Route::get('/get-bank-accounts-details/{id}', 'YSpaceController@getBankAccountDetails')->name('YSpaceController.getBankAccountDetails');
+    Route::match(['put', 'patch'], '/update-bank-account', 'YSpaceController@update')->name('YSpaceController.update');
+    Route::delete('/delete/{id}', 'YSpaceController@destroy')->name('YSpaceController.destroy');
+    Route::post('/bank-account-approve', 'YSpaceController@approve')->name('YSpaceController.approve');
+    Route::post('/bank-account-disapprove', 'YSpaceController@disapprove')->name('YSpaceController.disapprove');
 })->middleware('auth', 'verified');
 
 require __DIR__.'/auth.php';
