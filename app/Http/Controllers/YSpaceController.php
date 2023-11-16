@@ -61,7 +61,8 @@ class YSpaceController extends Controller
         }
         if ($request->pix_type != '3'){
             $request->pix_key = str_replace(['.', '-', '/', '(', ')', ' ', '+'], '', $request->pix_key);
-        } else if ($request->pixtype == 4) {
+        } 
+        if ($request->pixtype == 4) {
             $request->pix_key = $this->sanitizePhone($request->pix_key);
         }
 
@@ -93,7 +94,7 @@ class YSpaceController extends Controller
             $bank_accounts->type = $request->type == '0' ? 'current' : 'savings';
             $bank_accounts->pix_type = $request->pix_type;
             $bank_accounts->pix_key = $request->pix_key;
-            $bank_accounts->date_request = now()->format('Y-d-m H:i:s');
+            $bank_accounts->date_request = now()->format('d-m-Y H:i:s');
 
             if ($bank_accounts->save()) {
                 $data = [
@@ -120,6 +121,7 @@ class YSpaceController extends Controller
 
     public function update(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'bank' => 'required',
             'agency' => 'required|max:255',
@@ -152,7 +154,8 @@ class YSpaceController extends Controller
         }
         if ($request->pix_type != '3'){
             $request->pix_key = str_replace(['.', '-', '/', '(', ')', ' ', '+'], '', $request->pix_key);
-        } else if ($request->pixtype == 4) {
+        } 
+        if ($request->pixtype == 4) {
             $request->pix_key = $this->sanitizePhone($request->pix_key);
         }
 
@@ -174,8 +177,7 @@ class YSpaceController extends Controller
 
         try {
             DB::beginTransaction();
-            $bank_accounts = new BankAccounts();
-            $bank_accounts->user_id = auth()->user()->id;
+            $bank_accounts = BankAccounts::find($request->account_id);
             $bank_accounts->ispb = strval($ispb);
             $bank_accounts->bank = $bank_name->name;
             $bank_accounts->agency = strval($request->agency);
@@ -184,7 +186,8 @@ class YSpaceController extends Controller
             $bank_accounts->type = $request->type == '0' ? 'current' : 'savings';
             $bank_accounts->pix_type = $request->pix_type;
             $bank_accounts->pix_key = $request->pix_key;
-            $bank_accounts->date_request = now()->format('Y-d-m H:i:s');
+            $bank_accounts->date_request = now()->format('d-m-Y H:i:s');
+            $bank_accounts->status = 'pending';
 
             if ($bank_accounts->save()) {
                 $data = [
@@ -216,12 +219,14 @@ class YSpaceController extends Controller
             $bank_accounts = BankAccounts::select('bank_accounts.*', 'bank_lists.name', 'bank_lists.code', 'bank_lists.fullname', 'bank_lists.ispb')
             ->join('bank_lists', 'bank_accounts.ispb', '=', 'bank_lists.ispb')
             ->join('users', 'users.id', '=', 'bank_accounts.user_id')
+            ->orderBy('bank_accounts.id', 'desc')
             ->paginate(10);
         } else {
             $bank_accounts = BankAccounts::select('bank_accounts.*', 'bank_lists.name', 'bank_lists.code', 'bank_lists.fullname', 'bank_lists.ispb')
             ->join('bank_lists', 'bank_accounts.ispb', '=', 'bank_lists.ispb')
             ->join('users', 'users.id', '=', 'bank_accounts.user_id')
             ->where('bank_accounts.user_id', auth()->user()->id)
+            ->orderBy('bank_accounts.id', 'desc')
             ->paginate(10);
         }
         $data = [
@@ -234,9 +239,7 @@ class YSpaceController extends Controller
     public function getBankAccountDetails($account_id) {
 
         $user_id = auth()->user()->id;
-        $bank_account = BankAccounts::where('bank_accounts.user_id', $user_id)
-                ->where('bank_accounts.id', $account_id)
-                ->first();
+        $bank_account = BankAccounts::find($account_id);
 
         $data = [
             'bank_account' => $bank_account,
@@ -283,7 +286,7 @@ class YSpaceController extends Controller
                 ->update([
                     'disapproval_justification' => '',
                     'status' => 'approved',
-                    'updated_at' => now()->format('Y-d-m H:i:s')
+                    'updated_at' => now()->format('d-m-Y H:i:s')
                 ]);
 
             if (!$response) {
@@ -318,11 +321,11 @@ class YSpaceController extends Controller
 
         try {
             DB::beginTransaction();
-            $response = BankAccounts::where('id', $request->account_id)->first()
+            $response = BankAccounts::where('id', $request->account_id_disapprove)->first()
                 ->update([
                     'disapproval_justification' => $request->reason,
                     'status' => 'disapproved',
-                    'updated_at' => now()->format('Y-d-m H:i:s')
+                    'updated_at' => now()->format('m-d-Y H:i:s')
                 ]);
             if (!$response) {
                 $data = [

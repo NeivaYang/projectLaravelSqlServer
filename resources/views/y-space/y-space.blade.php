@@ -20,7 +20,7 @@
         <div class="accordion-item tw-max-w-7xl tw-mx-auto sm:tw-rounded-lg">
             <h2 class="accordion-header" id="accordionHeadinMangeAccounts">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionMangeAccountsDrop" aria-expanded="false" aria-controls="accordionMangeAccountsDrop">
-                <strong>Gerencie suas conta.</strong>
+                <strong>Gerencie suas contas.</strong>
                 </button>
             </h2>
             <div id="accordionMangeAccountsDrop" class="accordion-collapse collapse" aria-labelledby="accordionHeadinMangeAccounts" data-bs-parent="#accordionManageAccounts">
@@ -29,7 +29,7 @@
                         <div class="tw-overflow-hidden tw-shadow-sm tw-rounded-lg">
                             <div class="tw-min-w-full">
                                 <input hidden id="route-get-bank-accounts" data-url="{{ route('YSpaceController.getBankAccounts') }}">
-                                @if(Auth::user()->role != 'admin')
+                                @if(Auth::user()->role == 'admin')
                                     <table class="tw-min-w-full overflow-x-auto tw-divide-y tw-divide-gray-200">
                                         <thead class="tw-bg-gray-50">
                                             <tr>
@@ -41,7 +41,7 @@
                                                 <th scope="col" class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Ações</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="tw-bg-white tw-divide-y tw-divide-gray-200 {{ Auth::user()->role != 'admin' ? 'active' : '' }}" id="list-bankAccounts-table">
+                                        <tbody class="tw-bg-white tw-divide-y tw-divide-gray-200 {{ Auth::user()->role == 'admin' ? 'active' : '' }}" id="list-bankAccounts-table">
                                         </tbody>
                                     </table>
                                 @else
@@ -57,7 +57,7 @@
                                                 <th scope="col" class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Ações</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="tw-bg-white tw-divide-y tw-divide-gray-200 {{ Auth::user()->role == 'admin' ? 'active' : '' }}" id="list-bankAccounts-table-admin">
+                                        <tbody class="tw-bg-white tw-divide-y tw-divide-gray-200 {{ Auth::user()->role != 'admin' ? 'active' : '' }}" id="list-bankAccounts-table-admin">
                                         </tbody>
                                     </table>
                                 @endif
@@ -201,13 +201,14 @@
                 </div>
                     <div class="card-body">
                         <div class="tab-pane fade show active gap-1" id="conta" role="tabpanel" aria-labelledby="home-tab">
-                            <form id="UpdateBankAccForm" action="{{ route('YSpaceController.update') }}" method="PUT">
+                            <form id="UpdateBankAccForm" action="{{ route('YSpaceController.update') }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="account_id" id="account-id-update">
                                 <div class="d-flex">
                                     <div class="col-6">
                                         <x-input-label for="bank" :value="__('Banco')" />
                                         {{-- <label class="text-label">Banco</label> --}}
-                                        <select class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" data-live-search="true" name="bank" id="bank">
+                                        <select class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" data-live-search="true" name="bank" id="bank-update">
                                             <option selected disabled>Banco</option>
                                             @foreach($bank_list as $bank)
                                                 <option value="{{ $bank->ispb }}">{{ $bank->code }} - {{ $bank->name }}</option>
@@ -216,25 +217,25 @@
                                     </div>
 
                                     <div class="col-6">
-                                        <x-input-label for="agency" :value="__('Agencia')" />
-                                        <x-text-input id="agency" class="tw-block tw-mt-1 tw-w-full number" type="text" name="agency" :value="null"/>
+                                        <x-input-label for="agency-update" :value="__('Agencia')" />
+                                        <x-text-input id="agency-update" class="tw-block tw-mt-1 tw-w-full number" type="text" name="agency" :value="null"/>
                                     </div>
                                 </div>
 
                                 <div class="d-flex">
                                     <div class="col-6">
-                                        <x-input-label for="number" :value="__('Conta')"/>
-                                        <x-text-input id="number" class="tw-mt-1 tw-w-full number" type="text" name="number" />
+                                        <x-input-label for="number-update" :value="__('Conta')"/>
+                                        <x-text-input id="number-update" class="tw-mt-1 tw-w-full number" type="text" name="number" />
                                     </div>
                                     <div class="col-6">
-                                        <x-input-label for="digit" :value="__('Digito')"/>
-                                        <x-text-input id="digit" class="tw-mt-1 tw-w-full number" type="text" name="digit" />
+                                        <x-input-label for="digit-update" :value="__('Digito')"/>
+                                        <x-text-input id="digit-update" class="tw-mt-1 tw-w-full number" type="text" name="digit" />
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <x-input-label for="select-bank-acc-type-id" :value="__('Tipo de Conta')" />
-                                    <select class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" id="select-bank-acc-type-id" name="type">
+                                    <x-input-label for="select-bank-acc-type-update" :value="__('Tipo de Conta')" />
+                                    <select class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" id="select-bank-acc-type-uodate" name="type">
                                         <option value="0" selected>Corrente</option>
                                         <option value="1">Poupança</option>
                                     </select>
@@ -243,7 +244,7 @@
                                 <hr class="divider mt-4 mb-4">
 
                                 <div class="form-group">
-                                    <x-input-label for="select-bank-pix-type" :value="__('Tipo de Chave')" />
+                                    <x-input-label for="select-bank-pix-type-update" :value="__('Tipo de Chave PIX')" />
                                     <select  class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" id="select-bank-pix-type" name="pix_type">
                                         <option value="1">CPF</option>
                                         <option value="2">CNPJ</option>
@@ -254,8 +255,8 @@
                                 </div>
 
                                 <div>
-                                    <x-input-label for="pix-chave" :value="__('Chave')" />
-                                    <x-text-input id="pix-chave" class="tw-block tw-mt-1 tw-w-full" type="text" name="pix_key" :value="null"/>
+                                    <x-input-label for="pix-key-update" :value="__('Chave PIX')" />
+                                    <x-text-input id="pix-key-update" class="tw-block tw-mt-1 tw-w-full" type="text" name="pix_key" :value="null"/>
                                 </div>
 
                                 <x-primary-button class="tw-ms-3 mt-2" onclick="event.preventDefault();$('#UpdateBankAccForm').submit()">

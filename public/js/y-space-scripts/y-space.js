@@ -40,9 +40,11 @@ const YSpace = {
         // approve listener and disapprove submition
         $(document).on('click', '.disapprove-bank-account', function(){
             let account_id = $(this).data('id');
-            console.log(account_id);
+            console.log("acc id: " + account_id);
             $('input[name="account_id_disapprove"]').val(account_id);
+            console.log('input acc idval: ' + $('input[name="account_id_disapprove"]').val());    
         });
+
         $(document).on('click', '.approve-bank-account', function(){
             let account_id = $(this).data('id');
             let url = "/y-space/bank-account-approve"
@@ -73,10 +75,8 @@ const YSpace = {
                                     icon: 'success',
                                     title: 'Sucesso!',
                                     text: data.message,
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        YSpace.populateAccountTable();
-                                    }
+                                }).then(() => {
+                                    YSpace.populateAccountTable();
                                 });
                             } else {
                                 Swal.fire({
@@ -103,90 +103,48 @@ const YSpace = {
 
         $('#DisapproveForm').submit(function(e){
             e.preventDefault();
-            console.log("🚀 ~ file: adm-bank-accounts.js:22 ~ $ ~ $('#DisapproveForm').submit(function(e){", $('#DisapproveForm').serialize())
+
+            let formData = new FormData($(this)[0]);
+
+            $.ajax({
+                url: '/y-space/bank-account-disapprove',
+                type: "POST",
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    if(data.status == 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sucesso!',
+                            text: data.message,
+                        })
+                        $('#ModalReprovarConta').modal('hide');
+                        $('input[name="account_id_disapprove"]').val('');
+                        $(this)[0].reset();
+                        YSpace.populateAccountTable()
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message,
+                        })
+                    }
+                },
+            });
         });
-
-        // $(document).on('submit', '#DisapproveBankAccount', (e) => {
-        //     e.preventDefault();
-        //     let id = $('#disapprove-bank-account-submit').attr('data-id');
-        //     let url = "/usuarios/contas-bancarias/desaprovar";
-        //     let reason = $('#justificativa').val();
-        //     console.log("🚀 ~ file: adm-bank-accounts.js:22 ~ $ ~ reason:", reason)
-
-        //     let parentDivGroup = $('#div-bank-account-status-btn-' + id);
-        //     console.log("🚀 ~ file: adm-bank-accounts.js:191 ~ parentDivGroup:", parentDivGroup)
-
-        //     $.ajax({
-        //         url: url,
-        //         type: "POST",
-        //         data: { 
-        //             id : id,
-        //             reason: reason,
-        //         },
-        //         dataType: 'json',
-        //         success: function (data) {
-        //             if(data.status == 'success') {
-        //                 toastr.success(data.msg, data.title, {
-        //                     timeOut: 1500,
-        //                     closeButton: !0,
-        //                     debug: !1,
-        //                     newestOnTop: !0,
-        //                     progressBar: !0,
-        //                     positionClass: "toast-top-right",
-        //                     preventDuplicates: !0,
-        //                     onclick: null,
-        //                     showDuration: "400",
-        //                     hideDuration: "1000",
-        //                     extendedTimeOut: "1000",
-        //                     showEasing: "swing",
-        //                     hideEasing: "linear",
-        //                     showMethod: "fadeIn",
-        //                     hideMethod: "fadeOut",
-        //                     tapToDismiss: !0
-        //                 });
-        //                 $('#ModalReprovarConta').modal('toggle');
-        //                 $('#justificativa').val('');
-        //                 parentDivGroup.html(`
-        //                     <button type='button' class='btn btn-danger dropdown-toggle btn-xs' data-toggle='dropdown' aria-expanded='false' id='bank-account-status-btn-${id}'>Reprovada</button>
-        //                     <div class='dropdown-menu' x-placement='bottom-start' style='position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 42px, 0px);'>
-        //                         <a class='dropdown-item' onclick='Page.approveBankAccount(this)' data-action='1' data-id='${id}' href='#' data-btn-id='bank-account-status-btn-${id}'>Aprovar</a>
-        //                     </div>
-        //                 `);
-        //             } else {
-        //                 toastr.success(data.msg, data.title, {
-        //                     timeOut: 1500,
-        //                     closeButton: !0,
-        //                     debug: !1,
-        //                     newestOnTop: !0,
-        //                     progressBar: !0,
-        //                     positionClass: "toast-top-right",
-        //                     preventDuplicates: !0,
-        //                     onclick: null,
-        //                     showDuration: "400",
-        //                     hideDuration: "1000",
-        //                     extendedTimeOut: "1000",
-        //                     showEasing: "swing",
-        //                     hideEasing: "linear",
-        //                     showMethod: "fadeIn",
-        //                     hideMethod: "fadeOut",
-        //                     tapToDismiss: !0
-        //                 });
-        //             }
-        //         },
-        //         complete: function () {
-        //             COMMON.displayLoader(false);
-        //         },
-        //         error: function (xhr) {
-        //         },
-        //     });
-        // });
 
         // FIM... approve listener and disapprove submition
         //////////////////////////
         /////////////////////////
 
-        $(document).on('click','.bank-account-details', function () {
+        $(document).on('click','.bank-account-details', function (e) {
+            e.preventDefault();
             let account_id = $(this).data('id');
+
+            $("#change-acc-details").data("id", account_id);
 
             $.ajax({
                 url: '/y-space/get-bank-accounts-details/' + account_id,
@@ -212,7 +170,7 @@ const YSpace = {
                         `);
                     }
 
-                    switch(data.bank_account.pix_type){
+                    switch(data.bank_account.pix_type) {
                         case 'phone':
                             $("#acc-details-pix-type").html('Telefone');
                             break;
@@ -259,74 +217,14 @@ const YSpace = {
             });
         });
 
-        // $(document).on('click', '#change-acc-details', function () {
-        //     let account_id = $(this).data('id');
-
-        //     $.ajax({
-        //         url:'/perfil/contas-bancarias/detalhes/' + account_id,
-        //         type: "GET",
-        //         dataType: "json",
-        //         processData: true,
-        //         contentType: false,
-        //         success: function (feedback) {
-        //             $(".change-details-json").html("");
-        //             let bank = feedback.bank_accounts_list.code+'-'+feedback.bank_accounts_list.ispb;
-        //             let type= feedback.bank_accounts_list.type == 'current' ? 1 : 2;
-        //             let pix_type;
-        //             switch(feedback.bank_accounts_list.pix_type){
-        //                 case 'phone':   
-        //                     pix_type = 1;
-        //                     break;
-        //                 case 'cpf':
-        //                     pix_type = 2;
-        //                     break;
-        //                 case 'cnpj':
-        //                     pix_type = 3;
-        //                     break;
-        //                 case 'email':
-        //                     pix_type = 4;
-        //                     break;
-        //                 default:
-        //                     pix_type = 5;
-        //                     break;
-        //             };
-        //             $("#updateBank option").each(function() {
-        //                 if($(this).val() == bank) {
-        //                     $(this).prop('selected', true);
-        //                 }
-        //             })
-        //             $("#select-bank-acc-type-update option").each(function() {
-        //                 if($(this).val() == type) {
-        //                     $(this).prop('selected', true);
-        //                 }
-        //             });
-        //             $("#select-bank-pix-type-update option").each(function() {
-        //                 if($(this).val() == pix_type) {
-        //                     $(this).prop('selected', true);
-        //                 }
-        //             });
-        //             $("#change-details-agency").val(feedback.bank_accounts_list.agency);
-        //             $("#change-details-number").val(feedback.bank_accounts_list.number);
-        //             $("#change-details-digit").val(feedback.bank_accounts_list.digit);
-        //             $("#change-details-account-id").val(account_id);
-        //             $("#change-details-pix-key").val(feedback.bank_accounts_list.pix_key);
-        //             $("#change-details-account-id").attr("data-id", account_id);
-        //         },
-        //         error: function(xhr) {
-        //             console.log(xhr.responseText);
-        //             console.log(xhr.statusText);
-        //         },
-        //     });
-        // });
-
         $(document).on('submit', '#AddBankAccForm', function (e) {
             e.preventDefault();
-            let form = new FormData(this);
+            let formData = new FormData(this);
 
             $.ajax({
                 url: $(this).attr('action'),
                 type: "POST",
-                data: form,
+                data: formData,
                 dataType: "json",
                 processData: false,
                 contentType: false,
@@ -362,33 +260,96 @@ const YSpace = {
             });
         });
 
-        $(document).on('submit', '#UpdateBankAccForm', function (e) {
+        $(document).on('click', '#change-acc-details', function (e) {
             e.preventDefault();
-            let form = new FormData(this);
+            let account_id = $(this).data('id');
+            console.log("🚀 ~ file: y-space.js:261 ~ account_id:", account_id)
 
             $.ajax({
-                url: $(this).attr('action'),
-                type: "POST",
-                data: form,
+                url:'/y-space/get-bank-accounts-details/' + account_id,
+                type: "GET",
                 dataType: "json",
-                processData: false,
+                processData: true,
                 contentType: false,
-                beforeSend: function () {
-                    // UTILS.displayLoader();
-                },
                 success: function (data) {
+                    let type = data.bank_account.type == 'current' ? 0 : 1;
+                    let pix_type;
+                    switch(data.bank_account.pix_type){
+                        case 'phone':   
+                            pix_type = 1;
+                            break;
+                        case 'cpf':
+                            pix_type = 2;
+                            break;
+                        case 'cnpj':
+                            pix_type = 3;
+                            break;
+                        case 'email':
+                            pix_type = 4;
+                            break;
+                        default:
+                            pix_type = 5;
+                            break;
+                    };
+                    $("#bank-update option").each(function() {
+                        if($(this).val() == data.bank_account.ispb) {
+                            $(this).prop('selected', true);
+                            $("#bank-update").val(data.bank_account.ispb);
+                            $("#bank-update").trigger('change');
+                        }
+                    })
+                    $("#select-bank-acc-type-update option").each(function() {
+                        if($(this).val() == type) {
+                            $(this).prop('selected', true);
+                            $('#select-bank-acc-type-update').val(type);
+                            $('#select-bank-acc-type-update').trigger('change');
+                        }
+                    });
+                    $("#select-bank-pix-type-update option").each(function() {
+                        if($(this).val() == pix_type) {
+                            $(this).prop('selected', true);
+                            $('#select-bank-pix-type-update').val(pix_type);
+                            $('#select-bank-pix-type-update').trigger('change');
+                        }
+                    });
+                    $("#agency-update").val(data.bank_account.agency);
+                    $("#number-update").val(data.bank_account.number);
+                    $("#digit-update").val(data.bank_account.digit);
+                    $("#pix-key-update").val(data.bank_account.pix_key);
+                    $("#account-id-update").val(account_id);
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                    console.log(xhr.statusText);
+                },
+            });
+        });
+
+        $(document).on('submit', '#UpdateBankAccForm', function (e) {
+            e.preventDefault();
+
+            let formData = new FormData($(this)[0]);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/y-space/update-bank-account',
+                type: "POST",
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    $(this)[0].reset();
+                    YSpace.populateAccountTable();
                     if (data.status == 'success') {
                         Swal.fire({
                             icon: 'success',
                             title: 'Sucesso!',
                             text: data.message,
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                $('#UpdateBankAccForm')[0].reset();
-                                $('.default-select').selectpicker('refresh');
-                                YSpace.populateAccountTable();
-                            }
-                        });
+                        })
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -407,16 +368,11 @@ const YSpace = {
                     });
                     console.log(xhr.statusText);
                 },
-                complete: function () {
-                    // UTILS.displayLoader(false);
-                },
             });
         });
 
         $(document).on('click', '.remove-bank-account', function (e) {
-            // const url = '//localhost:8000';
             let account_id = $(this).data('id');
-            // let url = $('#route-destroy-accounts').data('url') + '/' + account_id;
             let csrf_token = $('meta[name="csrf-token"]').attr('content');
 
             Swal.fire({
@@ -505,21 +461,28 @@ const YSpace = {
 
                         $(tbody).append(`
                             <tr>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_date_request}</td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_owner_name}</td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.name}</td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.type == 'current' ? 'corrente' : 'poupança'}</td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.pix_key}</td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${accountStatus}</td>
-                                <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                    ${data.user == 'admin' ? (`
-                                        <a class="btn btn-sm btn-success approve-bank-account text-10" data-id="${element.id}">OK</a>
-                                        <a class="btn btn-sm btn-danger disapprove-bank-account text-10 d-inline-flex" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDisapproveModal">NO</a>
-                                    `) : (`
+                                ${data.user == 'admin' ? (`
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_date_request}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.name}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.type == 'current' ? 'corrente' : 'poupança'}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.pix_key}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${accountStatus}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
                                         <a class="btn btn-sm btn-primary bank-account-details text-10" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDetailsModal">detalhes</a>
                                         <a class="btn btn-sm btn-danger remove-bank-account text-10" data-id="${element.id}">X</a>
-                                    `)}
-                                </td>
+                                    </td>
+                                `) : (`
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_date_request}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_owner_name}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.name}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.type == 'current' ? 'corrente' : 'poupança'}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.pix_key}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${accountStatus}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
+                                        <a class="btn btn-sm btn-success approve-bank-account text-10 d-inline-flex" data-id="${element.id}">OK</a>
+                                        <a class="btn btn-sm btn-danger disapprove-bank-account text-10 d-inline-flex" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDisapproveModal">NO</a>
+                                    </td>
+                                `)}
                             </tr>
                         `);
                     });
@@ -533,7 +496,7 @@ const YSpace = {
                             </li>
                         `;
                     }
-                    for (let i = 1; i < data.bank_accounts.last_page; i++) {
+                    for (let i = 1; i <= data.bank_accounts.last_page; i++) {
                         pagination += `
                             <li class="page-item ${data.bank_accounts.current_page == i ? 'active' : ''}">
                                 <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${i}">${i}</a>
@@ -554,11 +517,14 @@ const YSpace = {
                 } else {
                     $('#accounts-table').append(`
                         <tr>
-                            <td class="text-center" colspan="6">
-                                <div class="text-center alert alert-secondary alert-light alert-dismissible fade show">
-                                    <small>Nenhuma conta bancária cadastrada.</small>
-                                </div>
+                            <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider text-center" colspan="6">
+                                Nenhuma conta bancária cadastrada
                             </td>
+                            <td class="d-none"></td>
+                            <td class="d-none"></td>
+                            <td class="d-none"></td>
+                            <td class="d-none"></td>
+                            <td class="d-none"></td>
                         </tr>
                     `);
                 };
