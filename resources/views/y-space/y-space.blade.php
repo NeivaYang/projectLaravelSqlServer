@@ -1,31 +1,31 @@
 @section('title', 'Y-space')
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-dark:text-gray-200 tw-leading-tight">
+        <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-dark:tw-text-gray-200 tw-leading-tight">
             {{ __('Y-space') }}
         </h2>
     </x-slot>
 
     <div class="tw-pt-12">
-        <div class="tw-max-w-7xl tw-mx-auto tw-sm:px-6 tw-lg:px-8">
+        <div class="tw-max-w-7xl tw-mx-auto sm:tw-px-6 lg:tw-px-8">
             <div class="tw-bg-white tw-dark:tw-bg-gray-800 tw-overflow-hidden tw-shadow-sm sm:tw-rounded-lg">
-                <div class="tw-p-6 tw-text-gray-900 tw-dark:text-gray-100 text-center">
+                <div class="tw-p-6 tw-text-gray-900 tw-dark:tw-text-gray-100 text-center">
                     {{ __("Aqui você pode gerenciar e adicionar novas novas.") }}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="accordion accordion-flush tw-py-4" id="accordionManageAccounts">
-        <div class="accordion-item tw-max-w-7xl tw-mx-auto sm:tw-rounded-lg">
+    <div class="accordion accordion-flush tw-py-4 tw-max-w-7xl tw-mx-auto sm:tw-px-6 lg:tw-px-8" id="accordionManageAccounts">
+        <div class="tw-bg-white tw-dark:tw-bg-gray-800 tw-overflow-hidden tw-shadow-sm sm:tw-rounded-lg">
             <h2 class="accordion-header" id="accordionHeadinMangeAccounts">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionMangeAccountsDrop" aria-expanded="false" aria-controls="accordionMangeAccountsDrop">
                 <strong>Gerencie suas contas.</strong>
                 </button>
             </h2>
-            <div id="accordionMangeAccountsDrop" class="accordion-collapse collapse" aria-labelledby="accordionHeadinMangeAccounts" data-bs-parent="#accordionManageAccounts">
+            <div id="accordionMangeAccountsDrop" class="accordion-collapse collapse tw-p-6 tw-text-gray-900 tw-dark:tw-text-gray-100" aria-labelledby="accordionHeadinMangeAccounts" data-bs-parent="#accordionManageAccounts">
                 <div class="accordion-body">
-                    <div class="tw-max-w-7xl tw-mx-auto tw-py-6 tw-sm:px-6 tw-lg:px-8">
+                    <div class="tw-max-w-7xl tw-mx-auto">
                         <div class="tw-overflow-hidden tw-shadow-sm tw-rounded-lg">
                             <div class="tw-min-w-full">
                                 <input hidden id="route-get-bank-accounts" data-url="{{ route('YSpaceController.getBankAccounts') }}">
@@ -71,7 +71,7 @@
                 <strong>Adicione uma conta.</strong>
                 </button>
             </h2>
-            <div id="accordionAddAccountsDrop" class="accordion-collapse collapse" aria-labelledby="accordionHeadinAddAccounts" data-bs-parent="#accordionManageAccounts">
+            <div id="accordionAddAccountsDrop" class="accordion-collapse collapse tw-p-6 tw-text-gray-900 tw-dark:tw-text-gray-100" aria-labelledby="accordionHeadinAddAccounts" data-bs-parent="#accordionManageAccounts">
                 <div class="accordion-body">
                     <div class="col-lg-10 mx-auto">
                         <div class="card">
@@ -85,7 +85,7 @@
                                                 <x-input-label for="bank" :value="__('Banco')" />
                                                 {{-- <label class="text-label">Banco</label> --}}
                                                 <select class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" data-live-search="true" name="bank" id="bank">
-                                                    <option selected disabled>Banco</option>
+                                                    <option disabled>Banco</option>
                                                     @foreach($bank_list as $bank)
                                                         <option value="{{ $bank->ispb }}">{{ $bank->code }} - {{ $bank->name }}</option>
                                                     @endforeach
@@ -209,7 +209,7 @@
                                         <x-input-label for="bank" :value="__('Banco')" />
                                         {{-- <label class="text-label">Banco</label> --}}
                                         <select class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" data-live-search="true" name="bank" id="bank-update">
-                                            <option selected disabled>Banco</option>
+                                            <option disabled>Banco</option>
                                             @foreach($bank_list as $bank)
                                                 <option value="{{ $bank->ispb }}">{{ $bank->code }} - {{ $bank->name }}</option>
                                             @endforeach
@@ -236,7 +236,7 @@
                                 <div class="form-group">
                                     <x-input-label for="select-bank-acc-type-update" :value="__('Tipo de Conta')" />
                                     <select class="tw-border-gray-300 tw-dark:tw-border-gray-700 tw-dark:tw-bg-gray-900 tw-dark:tw-text-gray-300 focus:tw-border-indigo-500 tw-dark:focus:tw-border-indigo-600 focus:tw-ring-indigo-500 tw-dark:focus:tw-ring-indigo-600 tw-rounded-md tw-shadow-sm tw-block tw-mt-1 tw-w-full" id="select-bank-acc-type-uodate" name="type">
-                                        <option value="0" selected>Corrente</option>
+                                        <option value="0">Corrente</option>
                                         <option value="1">Poupança</option>
                                     </select>
                                 </div>

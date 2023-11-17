@@ -39,7 +39,7 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="tw-bg-white tw-dark:bg-gray-800 tw-shadow">
+                <header class="tw-bg-white tw-dark:tw-bg-gray-800 tw-shadow">
                     <div class="tw-max-w-7xl tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
                         {{ $header }}
                     </div>
