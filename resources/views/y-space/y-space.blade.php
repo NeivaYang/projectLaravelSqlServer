@@ -242,12 +242,29 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <x-input-label for="select-bank-acc-type-update" :value="__('Tipo de Conta')" />
-                                    <x-select class="tw-mt-1 tw-w-full" id="select-bank-acc-type-uodate" name="type">
-                                        <option value="0">Corrente</option>
-                                        <option value="1">Poupança</option>
-                                    </x-select>
+                                <div class="tw-flex tw-items-center tw-justify-center gap-2 mb-2">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <x-input-label for="select-bank-acc-type-update" :value="__('Tipo de Conta')" />
+                                            <x-select class="tw-mt-1 tw-w-full" id="select-bank-acc-type-uodate" name="type">
+                                                <option value=""></option>
+                                                <option value="0">Corrente</option>
+                                                <option value="1">Poupança</option>
+                                            </x-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <x-input-label for="select-bank-pix-type-update" :value="__('Tipo de Chave PIX')" />
+                                            <x-select id="select-bank-pix-type-update" name="pix_type" class="tw-mt-1 tw-w-full">
+                                                <option value="1">CPF</option>
+                                                <option value="2">CNPJ</option>
+                                                <option value="3">Email</option>
+                                                <option value="4">Telefone</option>
+                                                <option value="5">Aleatória</option>
+                                            </x-select>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <hr class="divider mt-4 mb-4">

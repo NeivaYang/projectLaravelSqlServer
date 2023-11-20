@@ -81,9 +81,8 @@ const YSpace = {
                                     icon: 'success',
                                     title: 'Sucesso!',
                                     text: data.message,
-                                }).then(() => {
-                                    YSpace.populateAccountTable();
-                                });
+                                })
+                                YSpace.populateAccountTable();
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -397,16 +396,16 @@ const YSpace = {
                     let type = data.bank_account.type == 'current' ? 0 : 1;
                     let pix_type;
                     switch(data.bank_account.pix_type){
-                        case 'phone':   
+                        case 'cpf':   
                             pix_type = 1;
                             break;
-                        case 'cpf':
+                        case 'cnpj':
                             pix_type = 2;
                             break;
-                        case 'cnpj':
+                        case 'email':
                             pix_type = 3;
                             break;
-                        case 'email':
+                        case 'phone':
                             pix_type = 4;
                             break;
                         default:
@@ -464,7 +463,7 @@ const YSpace = {
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    $(this)[0].reset();
+                    $('#UpdateBankAccForm')[0].reset();
                     YSpace.populateAccountTable();
                     if (data.status == 'success') {
                         Swal.fire({

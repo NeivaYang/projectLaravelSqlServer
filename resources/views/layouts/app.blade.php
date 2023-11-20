@@ -27,6 +27,9 @@
         {{-- jquery mask --}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
+        {{-- hightcharts --}}
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+
 
         {{-- sweetalert --}}
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
