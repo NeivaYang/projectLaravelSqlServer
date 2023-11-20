@@ -10,6 +10,7 @@ use App\Traits\Common;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use DateTime;
 
 class YSpaceController extends Controller
 {
@@ -212,32 +213,91 @@ class YSpaceController extends Controller
         return $data;
     }
 
-    public function getBankAccounts()
+    public function getBankAccounts(Request $request)
     {
+        $filter = $request->filter ;
+        parse_str($filter, $params);
+
+        $filter_text_bool = false;
+        $filter_text = '';
+
         $user = auth()->user()->role;
+
+        $query = BankAccounts::with('user', 'bankList');
+
+        $filter_active = !(empty($params['bank_filter'])) || !(empty($params['type_filter'])) || !(empty($params['pix_type_filter'])) || !(empty($params['pix_key_filter'])) || !(empty($params['user_filter'])) || !(empty($params['date_filter']));
+        
+        if($filter_active) {
+            $filter_text_bool = true;
+            $filter_text = '<b>FILTROS ATIVOS: </b>';
+            if (isset($params['bank_filter']) && !empty($params['bank_filter'])) {
+                $bank_name = BankList::where('ispb', $params['bank_filter'])->first();
+                $filter_text .= 'Banco: ' . $bank_name->name . ' | ';
+                $query->where('bank_accounts.ispb', $params['bank_filter']);
+            }
+            if (isset($params['type_filter']) && !empty($params['type_filter'])) {
+                if($params['type_filter'] == '1') {
+                    $type = 'current';
+                    $filter_text .= 'Tipo: Conta Corrente | ';
+                } else {
+                    $type = 'savings';
+                    $filter_text .= 'Tipo: Conta Poupança | ';
+                }
+                $query->where('bank_accounts.type', $type);
+            }
+            if (isset($params['pix_type_filter']) && !empty($params['pix_type_filter'])) {
+                if($params['pix_type_filter'] == '1') {
+                    $pix_type = 'cpf';
+                    $filter_text .= 'Tipo PIX: CPF | ';
+                } else if($params['pix_type_filter'] == '2') {
+                    $pix_type = 'cnpj';
+                    $filter_text .= 'Tipo PIX: CNPJ | ';
+                } else if($params['pix_type_filter'] == '3') {
+                    $pix_type = 'email';
+                    $filter_text .= 'Tipo PIX: E-mail | ';
+                } else if($params['pix_type_filter'] == '4') {
+                    $pix_type = 'phone';
+                    $filter_text .= 'Tipo PIX: Telefone | ';
+                } else if($params['pix_type_filter'] == '5') {
+                    $pix_type = 'random';
+                    $filter_text .= 'Tipo PIX: Chave Aleatória | ';
+                }
+                $query->where('bank_accounts.pix_type', $pix_type);
+            }
+            if (isset($params['pix_key_filter']) && !empty($params['pix_key_filter'])) {
+                $pix_key = str_replace(['.', '-', '/', '(', ')', ' ', '+'], '', $params['pix_key_filter']);
+                $filter_text .= 'Chave PIX: ' . $pix_key . ' | ';
+                $query->where('bank_accounts.pix_key', 'like', '%' . $pix_key . '%');
+            }
+            if (isset($params['user_filter']) && !empty($params['user_filter'])) {
+                $filter_text .= 'Usuário: ' . $params['user_filter'] . ' | ';
+                $query->join('users', 'bank_accounts.user_id', '=', 'users.id')
+                ->whereRaw("LOWER(users.name) LIKE ?", ['%' . strtolower($params['user_filter']) . '%']);
+            }
+            if (isset($params['date_filter']) && !empty($params['date_filter'])) {
+                $date = new DateTime($params['date_filter']);
+                $filter_text .= 'Data: ' . $date->format('d-m-Y') . ' | ';
+                $query->whereBetween('bank_accounts.date_request', [$date->format('d-m-Y 00:00:00'), $date->format('d-m-Y 23:59:59')]);
+            }
+        }
+
         if ($user == 'admin') {
-            $bank_accounts = BankAccounts::select('bank_accounts.*', 'bank_lists.name', 'bank_lists.code', 'bank_lists.fullname', 'bank_lists.ispb')
-            ->join('bank_lists', 'bank_accounts.ispb', '=', 'bank_lists.ispb')
-            ->join('users', 'users.id', '=', 'bank_accounts.user_id')
-            ->orderBy('bank_accounts.id', 'desc')
-            ->paginate(10);
+            $bank_accounts = $query->orderBy('bank_accounts.id', 'desc')->paginate(10);
         } else {
-            $bank_accounts = BankAccounts::select('bank_accounts.*', 'bank_lists.name', 'bank_lists.code', 'bank_lists.fullname', 'bank_lists.ispb')
-            ->join('bank_lists', 'bank_accounts.ispb', '=', 'bank_lists.ispb')
-            ->join('users', 'users.id', '=', 'bank_accounts.user_id')
-            ->where('bank_accounts.user_id', auth()->user()->id)
+            $bank_accounts = $query->where('bank_accounts.user_id', auth()->user()->id)
             ->orderBy('bank_accounts.id', 'desc')
             ->paginate(10);
         }
         $data = [
             'bank_accounts' => $bank_accounts,
             'user' => $user,
+            'filter_text_bool' => $filter_text_bool,
+            'filter_text' => $filter_text,
         ];
         return $data;
     }
 
     public function getBankAccountDetails($account_id) {
-
         $user_id = auth()->user()->id;
         $bank_account = BankAccounts::find($account_id);
 

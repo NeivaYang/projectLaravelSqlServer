@@ -2,29 +2,6 @@
 
 
 const UTILS = {
-    // displayLoader: (verify = true) => {
-    //     if (verify) {
-    //         $("#preloader").css("display", "flex");
-    //         $("#preloader").css("background-color", "hsl(0 0% 100% / 40%)");
-    //         $("#preloader .sk-three-bounce").css("background-color", "unset");
-    //         $("#preloader").css("z-index", "99999");
-    //         return "atualizando...";
-    //     }
-    //     $("#preloader").css("display", "none");
-    //     $("#preloader").css("z-index", "unset");
-    //     $("#preloader").css("background-color", "white");
-    //     $("#preloader .sk-three-bounce").css("background-color", "white");
-    //     return "completo...";
-    // },
-
-    // search: (closeOnly = true) => {
-    //     console.log(Dashboard.getActiveFilters());
-    //     Dashboard.getChartsFirstPart();
-    //     Dashboard.getChartsSecondPart();
-    //     Dashboard.toggleFilters(closeOnly);
-    //     Dashboard.setActiveFiltersLabel();
-    // },
-
     toggleFilters: (closeOnly = false) => {
         if (closeOnly) {
             $(".chatbox").removeClass("active");
