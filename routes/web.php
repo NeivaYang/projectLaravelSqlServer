@@ -40,8 +40,4 @@ Route::prefix('/y-space')->namespace('App\Http\Controllers')->group(function () 
     Route::post('/bank-account-disapprove', 'YSpaceController@disapprove')->name('YSpaceController.disapprove');
 })->middleware(['auth', 'verified']);
 
-// Route::prefix('/y-space-quotes')->namespace('App\Http\Controllers')->group(function () {
-//     Route::get('/', 'QuotesController@getLanguages')->name('QuotesController.getLanguages');
-// })->middleware(['auth', 'verified']);
-
 require __DIR__.'/auth.php';
