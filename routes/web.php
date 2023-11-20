@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,10 +19,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -40,8 +40,8 @@ Route::prefix('/y-space')->namespace('App\Http\Controllers')->group(function () 
     Route::post('/bank-account-disapprove', 'YSpaceController@disapprove')->name('YSpaceController.disapprove');
 })->middleware(['auth', 'verified']);
 
-Route::prefix('/y-space-translator')->namespace('App\Http\Controllers')->group(function () {
-    Route::post('/', 'YSpaceController@disapprove')->name('YSpaceController.disapprove');
-})->middleware(['auth', 'verified']);
+// Route::prefix('/y-space-quotes')->namespace('App\Http\Controllers')->group(function () {
+//     Route::get('/', 'QuotesController@getLanguages')->name('QuotesController.getLanguages');
+// })->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

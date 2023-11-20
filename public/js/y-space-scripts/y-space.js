@@ -10,6 +10,12 @@ const YSpace = {
     },
 
     setListeners: () => {
+        $(document).on('click', '.clean-filter', function (e) {
+            e.preventDefault();
+            $('#FilterForm')[0].reset();
+            YSpace.populateAccountTable();
+        });
+
         const accordionMangeAccountsDrop = document.getElementById('accordionMangeAccountsDrop');
 
         accordionMangeAccountsDrop.addEventListener('shown.bs.collapse', function () {
@@ -135,7 +141,6 @@ const YSpace = {
                 },
             });
         });
-
         // FIM... approve listener and disapprove submition
         //////////////////////////
         /////////////////////////
@@ -217,9 +222,124 @@ const YSpace = {
             });
         });
 
+        // $(document).on('submit', '#FilterForm', function (e) {
+        //     e.preventDefault();
+        //     YSpace.populateAccountTable();
+        //     // let formData = new FormData(this);
+
+        //     // $.ajax({
+        //     //     url: $(this).attr('action'),
+        //     //     type: "get",
+        //     //     data: formData,
+        //     //     dataType: "json",
+        //     //     processData: false,
+        //     //     contentType: false,
+        //     //     success: function (data) {
+        //     //         console.log(data);
+        //     //         if (data.bank_accounts.data.length > 0) {
+        //     //             data.bank_accounts.data.map(element => {
+        //     //                 let accountStatus;
+        //     //                 switch (element.status) {
+        //     //                     case 'approved':
+        //     //                         accountStatus = `<span class="">Aprovado</span>`;
+        //     //                         break;
+        //     //                     case 'disapproved':
+        //     //                         accountStatus = `<span class="">Reprovado</span>`;
+        //     //                         break;
+        //     //                     default:
+        //     //                         accountStatus = `<span class="">Pendente</span>`;
+        //     //                         break;
+        //     //                 }
+    
+        //     //                 $(tbody).append(`
+        //     //                     <tr>
+        //     //                         ${data.user != 'admin' ? (`
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_date_request}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.bank_list.name}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.type == 'current' ? 'corrente' : 'poupança'}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.pix_key}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${accountStatus}</td>
+        //     //                             <td class=" tw-flex tw-items-center tw-justify-center gap-2 align-self-center tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
+        //     //                                 <a class="btn btn-sm btn-primary bank-account-details text-10" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDetailsModal">Detalhes</a>
+        //     //                                 <a class="btn btn-sm btn-danger remove-bank-account text-10" data-id="${element.id}">X</a>
+        //     //                             </td>
+        //     //                         `) : (`
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_date_request}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.user.name}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.bank_list.name}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.type == 'current' ? 'corrente' : 'poupança'}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.pix_key}</td>
+        //     //                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${accountStatus}</td>
+        //     //                             <td class="tw-flex tw-items-center tw-justify-center gap-2 align-self-center tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
+        //     //                                 <a class="btn btn-sm btn-success approve-bank-account text-10 d-inline-flex" data-id="${element.id}">OK</a>
+        //     //                                 <a class="btn btn-sm btn-danger disapprove-bank-account text-10 d-inline-flex" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDisapproveModal">NO</a>
+        //     //                                 <a class="btn btn-sm btn-primary bank-account-details text-10" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDetailsModal">Detalhes</a>
+        //     //                             </td>
+        //     //                         `)}
+        //     //                     </tr>
+        //     //                 `);
+        //     //             });
+    
+        //     //             let pagination = '<div class="pagination">';
+        //     //             console.log(data.bank_accounts.links)
+        //     //             if (data.bank_accounts.prev_page_url != null) {
+        //     //                 pagination += `
+        //     //                     <li class="page-item">
+        //     //                         <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${data.bank_accounts.current_page - 1}">Anterior</a>
+        //     //                     </li>
+        //     //                 `;
+        //     //             }
+        //     //             for (let i = 1; i <= data.bank_accounts.last_page; i++) {
+        //     //                 pagination += `
+        //     //                     <li class="page-item ${data.bank_accounts.current_page == i ? 'active' : ''}">
+        //     //                         <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${i}">${i}</a>
+        //     //                     </li>
+        //     //                 `;
+        //     //             }
+        //     //             if (data.bank_accounts.next_page_url != null) {
+        //     //                 pagination += `
+        //     //                     <li class="page-item">
+        //     //                         <a class="page-link tw-text-blue-500 hover:tw-text-blue-700" href="#" data-page="${data.bank_accounts.current_page + 1}">Próxima</a>
+        //     //                     </li>
+        //     //                 `;
+        //     //             }
+        //     //             pagination += '</div>';
+        //     //             $(tbody).append(`
+        //     //                 ${pagination}
+        //     //             `);
+        //     //         } else {
+        //     //             $('#accounts-table').append(`
+        //     //                 <tr>
+        //     //                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider text-center" colspan="6">
+        //     //                         Nenhuma conta bancária cadastrada
+        //     //                     </td>
+        //     //                     <td class="d-none"></td>
+        //     //                     <td class="d-none"></td>
+        //     //                     <td class="d-none"></td>
+        //     //                     <td class="d-none"></td>
+        //     //                     <td class="d-none"></td>
+        //     //                 </tr>
+        //     //             `);
+        //     //         };
+        //     //     },
+        //     //     error: function(xhr) {
+        //     //         console.log(xhr.responseText);
+        //     //         let response = JSON.parse(xhr.responseText);
+        //     //         Swal.fire({
+        //     //             icon: 'error',
+        //     //             title: 'Oops...',
+        //     //             text: response.message,
+        //     //         });
+        //     //         console.log(xhr.statusText);
+        //     //     },
+        //     // })
+        // });
+
         $(document).on('submit', '#AddBankAccForm', function (e) {
             e.preventDefault();
             let formData = new FormData(this);
+
+            $('.bank-btn').attr('disabled', true);
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -257,6 +377,8 @@ const YSpace = {
                     });
                     console.log(xhr.statusText);
                 },
+            }).always(function() {
+                $('.bank-btn').attr('disabled', false);
             });
         });
 
@@ -432,18 +554,23 @@ const YSpace = {
     populateAccountTable: (page) => {
         let url = page ? $('#route-get-bank-accounts').data('url') + '?page=' + page : $('#route-get-bank-accounts').data('url') ;
         let tbody = $('tbody.active');
-
-        console.log(url);
-        console.log(tbody);
+        console.log($('#FilterForm').serialize());
         $.ajax({
             url: url,
             type: "GET",
+            data: {
+                filter: function() { return $('#FilterForm').serialize(); }
+            },
             dataType: "json",
             beforeSend: function () {
                 $(tbody).html("");
+                $('.filter-text').html("");
             },
             success: function (data) {
                 console.log(data);
+                if(data.filter_text_bool) {
+                    $('.filter-text').html(data.filter_text);
+                }
                 if (data.bank_accounts.data.length > 0) {
                     data.bank_accounts.data.map(element => {
                         let accountStatus;
@@ -461,26 +588,27 @@ const YSpace = {
 
                         $(tbody).append(`
                             <tr>
-                                ${data.user == 'admin' ? (`
+                                ${data.user != 'admin' ? (`
                                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_date_request}</td>
-                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.name}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.bank_list.name}</td>
                                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.type == 'current' ? 'corrente' : 'poupança'}</td>
                                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.pix_key}</td>
                                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${accountStatus}</td>
-                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
-                                        <a class="btn btn-sm btn-primary bank-account-details text-10" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDetailsModal">detalhes</a>
+                                    <td class=" tw-flex tw-items-center tw-justify-center gap-2 align-self-center tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
+                                        <a class="btn btn-sm btn-primary bank-account-details text-10" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDetailsModal">Detalhes</a>
                                         <a class="btn btn-sm btn-danger remove-bank-account text-10" data-id="${element.id}">X</a>
                                     </td>
                                 `) : (`
                                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_date_request}</td>
-                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.display_owner_name}</td>
-                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.name}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.user.name}</td>
+                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.bank_list.name}</td>
                                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.type == 'current' ? 'corrente' : 'poupança'}</td>
                                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${element.pix_key}</td>
                                     <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">${accountStatus}</td>
-                                    <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
+                                    <td class="tw-flex tw-items-center tw-justify-center gap-2 align-self-center tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider">
                                         <a class="btn btn-sm btn-success approve-bank-account text-10 d-inline-flex" data-id="${element.id}">OK</a>
                                         <a class="btn btn-sm btn-danger disapprove-bank-account text-10 d-inline-flex" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDisapproveModal">NO</a>
+                                        <a class="btn btn-sm btn-primary bank-account-details text-10" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#bankAccountDetailsModal">Detalhes</a>
                                     </td>
                                 `)}
                             </tr>
@@ -515,10 +643,10 @@ const YSpace = {
                         ${pagination}
                     `);
                 } else {
-                    $('#accounts-table').append(`
+                    $(tbody).append(`
                         <tr>
                             <td class="tw-px-3 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-dark-500 tw-uppercase tw-tracking-wider text-center" colspan="6">
-                                Nenhuma conta bancária cadastrada
+                                Nenhuma conta bancária encontrada
                             </td>
                             <td class="d-none"></td>
                             <td class="d-none"></td>
@@ -539,16 +667,15 @@ const YSpace = {
                 });
                 console.log(xhr.statusText);
             },
-            complete: function () {
-                // UTILS.displayLoader(false);
-            },
         });
     },
 
     addMaskToInput: (element) => {
+        console.log("🚀 ~ file: y-space.js:664 ~ element:", element.closest('.form-group').parentNode.parentNode.nextElementSibling.nextElementSibling.querySelector("input[name='pix_key']"));
         console.log(element.value);
         let pix_type = element.value;
-        let pix_key = element.closest('.form-group').nextElementSibling.querySelector("input[name='pix_key']");
+        let pix_key = element.closest('.form-group').parentNode.parentNode.nextElementSibling.nextElementSibling.querySelector("input[name='pix_key']");
+        // let pix_key = element.closest('.form-group').nextElementSibling.querySelector("input[name='pix_key']");
         console.log(pix_key);
         $(pix_key).attr('type', 'text');
 

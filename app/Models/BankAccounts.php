@@ -15,8 +15,8 @@ class BankAccounts extends Model
     use SoftDeletes;
 
     protected $appends = [
-        'display_bank_name',
-        'display_owner_name',
+        // 'display_bank_name',
+        // 'display_owner_name',
         'display_date_request',
     ];
 
@@ -47,29 +47,23 @@ class BankAccounts extends Model
         return $this->belongsTo(BankList::class, 'ispb', 'ispb');
     }
 
-    // public function scopeWithBankList($query)
-    // {
-    //     return $query->select('bank_accounts.*', 'bank_lists.name', 'bank_lists.code', 'bank_lists.fullname', 'bank_lists.ispb')
-    //         ->join('bank_lists', 'bank_accounts.ispb', '=', 'bank_lists.ispb');
-    // }
     public function scopeWithRelations($query, $relations = [])
     {
         if (empty($relations)) {
             $relations = ['user', 'bankList'];
         }
-
         return $query->with($relations);
     }
 
-    public function getDisplayBankNameAttribute() {
-        $bank = BankList::query()->select('fullname')->where('ispb', '=', $this->ispb)->first();
-        return $bank->name;
-    }
+    // public function getDisplayBankNameAttribute() {
+    //     $bank = BankList::query()->select('fullname')->where('ispb', '=', $this->ispb)->first();
+    //     return $bank->name;
+    // }
 
-    public function getDisplayOwnerNameAttribute() {
-        $user = User::query()->select('name')->where('id', '=', $this->user_id)->first();
-        return $user->name;
-    }
+    // public function getDisplayOwnerNameAttribute() {
+    //     $user = User::query()->select('name')->where('id', '=', $this->user_id)->first();
+    //     return $user->name;
+    // }
 
     public function getDisplayDateRequestAttribute() {
         return date('d/m/Y', strtotime($this->date_request));
