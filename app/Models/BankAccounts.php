@@ -15,8 +15,6 @@ class BankAccounts extends Model
     use SoftDeletes;
 
     protected $appends = [
-        // 'display_bank_name',
-        // 'display_owner_name',
         'display_date_request',
     ];
 
@@ -54,16 +52,6 @@ class BankAccounts extends Model
         }
         return $query->with($relations);
     }
-
-    // public function getDisplayBankNameAttribute() {
-    //     $bank = BankList::query()->select('fullname')->where('ispb', '=', $this->ispb)->first();
-    //     return $bank->name;
-    // }
-
-    // public function getDisplayOwnerNameAttribute() {
-    //     $user = User::query()->select('name')->where('id', '=', $this->user_id)->first();
-    //     return $user->name;
-    // }
 
     public function getDisplayDateRequestAttribute() {
         return date('d/m/Y', strtotime($this->date_request));
