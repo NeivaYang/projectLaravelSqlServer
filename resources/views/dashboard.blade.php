@@ -46,9 +46,9 @@
         <div class="tw-flex tw-items-center tw-justify-evenly">
             <div class="col-6">
                 <div class="tw-pt-4">
-                    <div class="tw-max-w-7xl tw-mx-auto sm:tw-px-6 lg:tw-px-8">
+                    <div class="tw-max-w-7xl tw-mx-auto sm:tw-px-3 lg:tw-px-4">
                         <div class="tw-bg-white tw-dark:tw-bg-gray-800 tw-overflow-hidden tw-shadow-sm sm:tw-rounded-lg">
-                            <div class="tw-p-6 tw-text-gray-900 tw-dark:text-gray-100 mb-2" id="chart-status">
+                            <div class="tw-p-6 tw-text-gray-900 tw-dark:text-gray-100" id="chart-status">
                             </div>
                         </div>
                     </div>
@@ -56,9 +56,9 @@
             </div>
             <div class="col-6">
                 <div class="tw-pt-4">
-                    <div class="tw-max-w-7xl tw-mx-auto sm:tw-px-6 lg:tw-px-8">
+                    <div class="tw-max-w-7xl tw-mx-auto sm:tw-px-3 lg:tw-px-4">
                         <div class="tw-bg-white tw-dark:tw-bg-gray-800 tw-overflow-hidden tw-shadow-sm sm:tw-rounded-lg">
-                            <div class="tw-p-6 tw-text-gray-900 tw-dark:text-gray-100 text-center mb-2" id="chart-pix-type">
+                            <div class="tw-p-6 tw-text-gray-900 tw-dark:text-gray-100 text-center" id="chart-pix-type">
                                 <b>{{ __('Total de contas bancárias cadastradas: ') }}</b> {{ $total_bank_accounts}}
                             </div>
                         </div>

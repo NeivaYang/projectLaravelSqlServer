@@ -429,7 +429,7 @@ const YSpace = {
             },
             subtitle: {
                 text:
-                'Porceentagem de cada status das contas cadastradas '
+                'Porcentagem de cada status das contas bancárias cadastradas '
             },
             plotOptions: {
                 series: {
@@ -491,7 +491,7 @@ const YSpace = {
             },
             subtitle: {
                 text:
-                'Porceentagem de cada tipo de chave pix cadastrada'
+                'Porcentagem de cada tipo de chave pix cadastrada'
             },
             plotOptions: {
                 series: {
