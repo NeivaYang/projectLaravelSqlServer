@@ -246,7 +246,7 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <x-input-label for="select-bank-acc-type-update" :value="__('Tipo de Conta')" />
-                                            <x-select class="tw-mt-1 tw-w-full" id="select-bank-acc-type-uodate" name="type">
+                                            <x-select class="tw-mt-1 tw-w-full" id="select-bank-acc-type-update" name="type">
                                                 <option value=""></option>
                                                 <option value="0">Corrente</option>
                                                 <option value="1">Poupança</option>
