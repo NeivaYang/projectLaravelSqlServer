@@ -81,8 +81,11 @@ const YSpace = {
                                     icon: 'success',
                                     title: 'Sucesso!',
                                     text: data.message,
-                                })
-                                YSpace.populateAccountTable();
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        YSpace.populateAccountTable();
+                                    }
+                                });
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -125,11 +128,14 @@ const YSpace = {
                             icon: 'success',
                             title: 'Sucesso!',
                             text: data.message,
-                        })
-                        $('#ModalReprovarConta').modal('hide');
-                        $('input[name="account_id_disapprove"]').val('');
-                        $(this)[0].reset();
-                        YSpace.populateAccountTable()
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#ModalReprovarConta').modal('hide');
+                                $('input[name="account_id_disapprove"]').val('');
+                                $('#DisapproveForm')[0].reset();
+                                YSpace.populateAccountTable()
+                            }
+                        });
                     } else {
                         Swal.fire({
                             icon: 'error',
